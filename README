@@ -1,0 +1,101 @@
+Description:
+This program takes the spot-size measurements of a Gaussian beam at several distances, 
+and attempts to calculate the position and size of the beam waist.  The algorithm is 
+based on the calculation done in the article:
+
+M. Hajek, "Waist parameter determination from measured spot sizes," Appl. Opt. 28, 5285-5287 (1989)
+
+This is an elaboration and simplification of te approach given in Nemoto
+
+
+S. Nemoto, "Determination of waist parameters of a Gaussian beam," Appl. Opt. 25, 3859-3863 (1986)
+
+
+Program usage:
+
+./hajek.py [-f freq  ] "filename"
+
+-f is the laser wavelength in um  i.e.  852.09  is given by "-f 0.85209" 
+   The wavelength must be specified correctly - it defaults to 852.09 nm
+
+filename is the file containing the spot size data.  The file is a 2-column space delimited file,
+with the position measurements in the first file, and the spot size radius in the second column
+
+
+
+Program Operation:
+
+This program imports the data and takes enumerates all combinations of 3 data points.  For each 
+combination, it uses the following equations to calculate the r (z) and w (position and spot size)
+of the beam's waist.  The program then averages over all values to find a statistically correct value
+
+    r0s = (x1-x3)/(((r2**2 - r1**2)/(x2 - x1) - (r3**2 - r2**2)/(x3 - x2)))
+    x0 = (x1 + x2)/2.0  - (r0s/2.0)*(r2**2-r1**2)/(x2-x1)
+    w = wavelength*sqrt(r0s)/pi
+
+
+Sample Data, Provided in Nemoto and Hajek:
+
+
+./hajek -f 0.6328 data
+
+>> file: data 
+
+100.0 104.51
+105.0 65.9
+110.0 25.3
+115.0 39.2
+120.0 76.1
+125.0 128.4
+
+
+>> output
+
+113.9 26.55
+112.0 24.25
+111.8 23.97
+111.1 22.97
+111.4 22.45
+111.7 22.93
+111.2 22.06
+111.7 23.44
+111.2 21.87
+111.3 20.58
+111.5 21.0
+111.9 22.02
+111.6 21.25
+111.9 23.19
+111.6 21.38
+112.0 19.93
+111.2 24.58
+111.5 21.51
+112.6 19.36
+114.2 17.75
+----------------
+Mean waist results
+Position: 111.9 mm  Size: 22.15 um
+
+
+
+
+References:
+
+@article{hajek1989wpd,
+  title={{Waist parameter determination from measured spot sizes}},
+  author={Hajek, M.},
+  journal={Appl. Opt},
+  volume={28},
+  pages={5285--5287},
+  year={1989},
+  publisher={OSA}
+}
+
+@article{nemoto1986dwp,
+  title={{Determination of waist parameters of a Gaussian beam}},
+  author={Nemoto, S.},
+  journal={Appl. Opt},
+  volume={25},
+  pages={3859--3863},
+  year={1986},
+  publisher={OSA}
+}
