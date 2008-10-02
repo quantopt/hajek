@@ -13,15 +13,18 @@ S. Nemoto, "Determination of waist parameters of a Gaussian beam," Appl. Opt. 25
 
 Program usage:
 
-./hajek.py [-f freq  ] "filename"
+./hajek.py [-f freq] [-p] "filename"
 
 -f is the laser wavelength in um  i.e.  852.09  is given by "-f 0.85209" 
    The wavelength must be specified correctly - it defaults to 852.09 nm
 
+-p prints the results for each combination.. silient by default
+
+
 filename is the file containing the spot size data.  The file is a 2-column space delimited file,
 with the position measurements in the first file, and the spot size radius in the second column
 
-
+We can start data position at 0mm with no bad side effects
 
 Program Operation:
 
@@ -33,6 +36,10 @@ of the beam's waist.  The program then averages over all values to find a statis
     x0 = (x1 + x2)/2.0  - (r0s/2.0)*(r2**2-r1**2)/(x2-x1)
     w = wavelength*sqrt(r0s)/pi
 
+
+this program seems to have a problem with real data.. negative ro^2 values are produced, leading to an imaginary
+result.  I am currently just ignoring the negative values, and throwing away the results.  This does
+not, lend much faith to the algorithm however..
 
 Sample Data, Provided in Nemoto and Hajek:
 

@@ -32,8 +32,11 @@ def calculate(comb):
 
     r0s = (x1-x3)/(((r2**2 - r1**2)/(x2 - x1) - (r3**2 - r2**2)/(x3 - x2)))
     x0 = (x1 + x2)/2.0  - (r0s/2.0)*(r2**2-r1**2)/(x2-x1)
-    w = wavelength*sqrt(r0s)/pi
-    return (x0, w)
+    if r0s >0:
+        w = wavelength*sqrt(abs(r0s))/pi
+        return (x0, w)
+    else:
+        return 0
 
 
 
@@ -44,6 +47,7 @@ def main():
     parser = OptionParser(usage=usage, description=description)
     parser.set_defaults(freq=.85209, solver="0")
     parser.add_option("-f", "--freq", help="set frequency of laser in nm", type="float")
+    parser.add_option("-p", "--printall", help="print intermediate calculations", action="store_true", default=False)
     (options, args) = parser.parse_args()
     return (options, args)
     
@@ -57,14 +61,17 @@ if __name__ == "__main__":
     results = []
     
     for comb in xuniqueCombinations(data, 3):
-        results.append(calculate(comb))
+        ans = calculate(comb)
+        if ans > 0:
+            results.append(ans)
 
 
     zsum = wsum = 0
     for r in results:
         zsum += r[0]
         wsum += r[1]
-        print round(r[0],1), round(r[1],2)
+        if (options.printall == True):
+            print round(r[0],1), round(r[1],2)
 
   
     z = zsum/len(results)
